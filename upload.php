@@ -21,7 +21,7 @@ foreach ($_FILES["media"]["name"] as $key => $name) {
     $mediaFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
     // Check file size (limit to 50MB per file)
-    if ($_FILES["media"]["size"][$key] > 50000000) {
+    if ($_FILES["media"]["size"][$key] > 5000000) {
         echo "Sorry, your file is too large.";
         $uploadOk = 0;
     }
