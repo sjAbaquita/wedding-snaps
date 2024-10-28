@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag & Drop Album Uploader</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .upload-container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .album-input {
+            margin-bottom: 20px;
+        }
+
+        .drag-drop-zone {
+            border: 2px dashed #ccc;
+            padding: 30px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            color: #666;
+            transition: border-color 0.3s;
+        }
+
+        .drag-drop-zone.drag-over {
+            border-color: #333;
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .image-preview {
+            position: relative;
+            display: inline-block;
+        }
+
+        .image-preview img, .image-preview video {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin: 5px;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background-color: green;
+            width: 0%;
+        }
+
+        .loading-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+<div class="upload-container">
+    <h2>Upload Media to Album</h2>
+    <input type="text" id="albumName" class="album-input" placeholder="Enter Album Name" required>
+    <div id="dragDropZone" class="drag-drop-zone">Drag & Drop Files Here or Click to Select</div>
+    <div id="imagePreviewContainer" class="image-preview-container"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const dragDropZone = $('#dragDropZone');
+        let selectedFiles = []; // Store selected files
+
+        // Event handlers for drag-and-drop
+        dragDropZone.on('dragover', function (e) {
+            e.preventDefault();
+            dragDropZone.addClass('drag-over');
+        });
+
+        dragDropZone.on('dragleave', function () {
+            dragDropZone.removeClass('drag-over');
+        });
+
+        dragDropZone.on('drop', function (e) {
+            e.preventDefault();
+            dragDropZone.removeClass('drag-over');
+            const files = e.originalEvent.dataTransfer.files;
+            handleFileSelection(files);
+        });
+
+        dragDropZone.on('click', function () {
+            $('<input type="file" multiple accept="image/*,video/*">').on('change', function (e) {
+                handleFileSelection(e.target.files);
+            }).click();
+        });
+
+        function handleFileSelection(files) {
+            if ($('#albumName').val().trim() === "") {
+                alert('Please enter an album name.');
+                return;
+            }
+
+            Array.from(files).forEach((file, index) => {
+                selectedFiles.push(file);
+                addImagePreview(file, selectedFiles.length - 1);
+            });
+            
+            uploadFilesToAlbum();
+        }
+
+        // Function to add image/video preview
+        function addImagePreview(file, index) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const mediaType = file.type.startsWith("video") ? "video" : "img";
+                const mediaElement = `
+                    <div class="image-preview" data-index="${index}">
+                        ${mediaType === "video" 
+                            ? `<video src="${e.target.result}" controls></video>` 
+                            : `<img src="${e.target.result}" alt="Preview">`}
+                        <div class="progress-bar"></div>
+                    </div>`;
+                $('#imagePreviewContainer').append(mediaElement);
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function uploadFilesToAlbum() {
+            const albumName = $('#albumName').val().trim();
+            selectedFiles.forEach((file, index) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('album', albumName);
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/test-php.php', true);
+
+                xhr.upload.onprogress = function (e) {
+                    if (e.lengthComputable) {
+                        const percentComplete = (e.loaded / e.total) * 100;
+                        $(`.image-preview[data-index='${index}'] .progress-bar`).css('width', percentComplete + '%');
+                    }
+                };
+
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        $(`.image-preview[data-index='${index}'] .loading-text`).text('Uploaded');
+                    } else {
+                        $(`.image-preview[data-index='${index}'] .loading-text`).text('Error');
+                    }
+                };
+
+                xhr.send(formData);
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

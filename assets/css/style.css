@@ -1,0 +1,237 @@
+* {
+    /* // <uniquifier>: Use a unique and descriptive class name
+    // <weight>: Use a value from 400 to 900 */
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../images/bg.jpg');
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+section {
+    text-align: center;
+    padding: 20px;
+}
+
+.logo img {
+    width: 200px;
+}
+
+.media-preview {
+    display: inline-block;
+    margin: 10px;
+    position: relative;
+}
+
+.media-preview img,
+.media-preview video {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.media-preview .remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 5px;
+    background-color: green;
+}
+
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
+.upload-container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+    display: flex;
+    flex-flow: column;
+}
+
+.album-input {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 6px;
+    line-height: 1.5;
+    padding: 5px 10px;
+    transition: box-shadow 100ms ease-in, border 100ms ease-in, background-color 100ms ease-in;
+    border: 2px solid #dee1e2;
+    color: rgb(14, 14, 16);
+    background: #dee1e2;
+    display: block;
+    height: 36px;
+}
+.album-input:hover {
+    border-color: #ccc;
+}
+.album-input:focus{
+    border-color: #9147ff;
+    background: #fff;
+}
+
+.drag-drop-zone {
+    border: 2px dashed #ccc;
+    padding: 30px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    color: #666;
+    transition: border-color 0.3s;
+}
+
+.drag-drop-zone.drag-over {
+    border-color: #333;
+}
+
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.image-preview {
+    position: relative;
+    display: inline-block;
+}
+
+.image-preview img, .image-preview video {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    margin: 5px;
+}
+
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+    background-color: green;
+    width: 0%;
+}
+
+.loading-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #444;
+}
+
+
+/* Album */
+.album {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+}
+
+.album img, .album video {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    /* position: relative; */
+    /* width: 300px; */
+    text-align: center;
+    place-self: center;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#mediaPreviewContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    
+    max-height: 60vh; /* Adjust based on your layout needs */
+    overflow-y: auto; /* Enables vertical scrolling when content overflows */
+    padding: 10px 0;
+}
+
+
+
+@media (max-width: 720px) {
+    body {
+        /* background-position: 5%; */
+        background-position: center;
+    }
+    .logo img {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 80%;
+    }
+
+    .album img, .album video {
+        width: 130px;
+    }
+
+    #mediaPreviewContainer .media-preview {
+        margin: 0;
+    }
+    #mediaPreviewContainer .media-preview img,
+    #mediaPreviewContainer .media-preview video {
+        width: 130px;
+    }
+}
